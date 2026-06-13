@@ -4,6 +4,9 @@
  */
 package view;
 
+import javax.swing.*;
+import java.awt.*;
+
 /**
  *
  * @author yurip
@@ -13,9 +16,38 @@ public class TelaRelatorio extends javax.swing.JFrame {
     /**
      * Creates new form TelaRelatorio
      */
-    public TelaRelatorio() {
+    public TelaRelatorio(java.util.List<model.Estagiario> lista) {
         initComponents();
+
+
+        setTitle("Histórico do Estagiário");
+        setSize(400, 400);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        JTextArea areaTexto = new JTextArea();
+        areaTexto.setEditable(false);
+        areaTexto.setFont(new Font("Monospaced", Font.PLAIN, 13));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("============= HISTÓRICO DE PONTO =============\n\n");
+
+        for (model.Estagiario est : lista) {
+            sb.append("Estagiário: ").append(est.getNome()).append("\n");
+            sb.append("Entrada: ").append(est.getHorarioEntrada()).append("\n");
+            sb.append("Saída: ").append(est.getHorarioSaida() != null ? est.getHorarioSaida() : "Não registrada").append("\n");
+            sb.append("Tickets: ").append(est.getTickets()).append("\n");
+            sb.append("Produtividade: ").append(String.format("%.2f", est.getProdutividade())).append("%\n");
+            sb.append("---------------------------------------------\n");
+        }
+
+        areaTexto.setText(sb.toString());
+
+        JScrollPane scroll = new JScrollPane(areaTexto);
+        add(scroll, BorderLayout.CENTER);
+
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -31,12 +63,12 @@ public class TelaRelatorio extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();
@@ -49,7 +81,7 @@ public class TelaRelatorio extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -72,12 +104,13 @@ public class TelaRelatorio extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TelaRelatorio().setVisible(true);
+                new TelaRelatorio(new java.util.ArrayList<>()).setVisible(true);
             }
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+}   // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-}
-//Atualização do projeto
+
+
+

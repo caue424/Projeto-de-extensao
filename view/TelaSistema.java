@@ -15,15 +15,19 @@ public class TelaSistema extends JFrame{
         private JButton botaoEntrada;
         private JButton botaoSaida;
         private JButton botaoTicket;
+        private JButton botaoHistorico;
 
         private JLabel labelEntrada;
         private JLabel labelSaida;
         private JLabel labelTickets;
         private JLabel labelProdutividade;
+        private JLabel labelHistorico;
 
         private Estagiario estagiario;
 
         private EstagioService service;
+
+        private java.util.List<Estagiario> listaHistorico = new java.util.ArrayList<>();
 
         public TelaSistema() {
 
@@ -64,6 +68,7 @@ public class TelaSistema extends JFrame{
            botaoEntrada = new JButton("Registrar Entrada");
            botaoSaida = new JButton("Registrar Saída");
            botaoTicket = new JButton("Adicionar Ticket");
+           botaoHistorico = new JButton("Verificar Histórico");
 
                     botaoEntrada.setBackground(
             new Color(33, 150, 243)
@@ -83,14 +88,22 @@ public class TelaSistema extends JFrame{
 
         botaoTicket.setForeground(Color.WHITE);
 
+        botaoHistorico.setBackground(
+                    new Color(244, 181, 54)
+        );
+
+        botaoHistorico.setForeground(Color.WHITE);
+
         botaoEntrada.setFont(fonteBotao);
         botaoSaida.setFont(fonteBotao);
         botaoTicket.setFont(fonteBotao);
+        botaoHistorico.setFont(fonteBotao);
 
            labelEntrada = new JLabel("Entrada: ");
            labelSaida = new JLabel("Saída: ");
            labelTickets = new JLabel("Tickets: 0");
            labelProdutividade = new JLabel("Produtividade: 0%");
+           labelHistorico = new JLabel("Verificar Histórico");
 
 
                 JLabel labelStatus = new JLabel("Status: Trabalhando");
@@ -98,6 +111,7 @@ public class TelaSistema extends JFrame{
                 labelEntrada.setFont(fonteLabel);
                 labelSaida.setFont(fonteLabel);
                 labelTickets.setFont(fonteLabel);
+                labelHistorico.setFont(fonteLabel);
 
                 labelProdutividade.setFont(
                     new Font("Arial", Font.BOLD, 16)
@@ -119,6 +133,7 @@ public class TelaSistema extends JFrame{
            add(botaoEntrada);
            add(botaoSaida);
            add(botaoTicket);
+           add(botaoHistorico);
            add(labelEntrada);
            add(labelSaida);
            add(labelTickets);
@@ -128,6 +143,7 @@ public class TelaSistema extends JFrame{
            botaoEntrada.addActionListener(e -> registrarEntrada());
            botaoSaida.addActionListener(e -> registrarSaida());
            botaoTicket.addActionListener(e -> adicionarTicket());
+           botaoHistorico.addActionListener(e -> abrirHistorico());
 
                     ((JPanel)getContentPane()).setBorder(
                 BorderFactory.createEmptyBorder(
@@ -145,37 +161,39 @@ public class TelaSistema extends JFrame{
            
         }
 
+    private void abrirHistorico() {
+        TelaRelatorio tela = new TelaRelatorio(listaHistorico);
+        tela.setVisible(true);
+    }
 
 
-        private void registrarEntrada() {
-            String nome = campoNome.getText();
-            estagiario = new Estagiario(nome);
-            service.registrarEntrada(estagiario);
-            botaoTicket.setEnabled(true);
-            labelEntrada.setText(
-                "Entrada: " + estagiario.getHorarioEntrada());
-        }
+    private void registrarEntrada() {
+        String nome = campoNome.getText();
+        estagiario = new Estagiario(nome);
+        service.registrarEntrada(estagiario);
 
-        private void registrarSaida() {
-            if (estagiario != null) {
 
-                service.registrarSaida(estagiario);
-            
-                labelSaida.setText(
-                    "Saída: " + estagiario.getHorarioSaida());
-                    botaoTicket.setEnabled(false);
-                }
-        }
+        listaHistorico.add(estagiario);
 
-        private void adicionarTicket() {
-            if (estagiario != null) {
-                service.adicionarTicket(estagiario);
-                labelTickets.setText(
-                    "Tickets: " + estagiario.getTickets());
-                labelProdutividade.setText(
-                    "Produtividade: " + String.format("%.2f", estagiario.getProdutividade()) + "%");
-            }
+        botaoTicket.setEnabled(true);
+        labelEntrada.setText("Entrada: " + estagiario.getHorarioEntrada());
+    }
+
+    private void registrarSaida() {
+        if (estagiario != null) {
+            service.registrarSaida(estagiario);
+            labelSaida.setText("Saída: " + estagiario.getHorarioSaida());
+            botaoTicket.setEnabled(false);
         }
     }
+
+    private void adicionarTicket() {
+        if (estagiario != null) {
+            service.adicionarTicket(estagiario);
+            labelTickets.setText("Tickets: " + estagiario.getTickets());
+            labelProdutividade.setText("Produtividade: " + String.format("%.2f", estagiario.getProdutividade()) + "%");
+        }
+    }
+}
     
         
